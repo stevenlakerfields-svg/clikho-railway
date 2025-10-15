@@ -7,3 +7,7 @@ services:
     envVars:
       - key: TURN_PASSWORD
         generateValue: true
+    disk:
+      name: data
+      mountPath: /var/lib/coturn
+      sizeGB: 1
