@@ -1,9 +1,11 @@
 FROM coturn/coturn:latest
 
-# Install dependencies for health checks
-RUN apt-get update && apt-get install -y \
+# Update package lists and install dependencies more reliably
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     curl \
-    netcat \
+    netcat-openbsd \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Create log directory
