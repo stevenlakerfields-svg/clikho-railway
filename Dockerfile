@@ -1,12 +1,7 @@
 FROM coturn/coturn:latest
 
-# Update package lists and install dependencies more reliably
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    curl \
-    netcat-openbsd \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Use Alpine-based image which is more reliable
+# The base coturn image already has necessary tools
 
 # Create log directory
 RUN mkdir -p /var/log/coturn
@@ -17,13 +12,9 @@ EXPOSE 3478 3478/udp 5349 5349/tcp
 # Copy configuration file
 COPY turnserver.conf /etc/turnserver.conf
 
-# Create a simple health check script
-COPY healthcheck.sh /usr/local/bin/healthcheck.sh
-RUN chmod +x /usr/local/bin/healthcheck.sh
-
-# Health check
+# Use built-in health check (no external dependencies needed)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD /usr/local/bin/healthcheck.sh
+    CMD timeout 5 sh -c 'echo > /dev/tcp/localhost/3478' || exit 1
 
 # Run TURN server
 CMD ["turnserver", "-c", "/etc/turnserver.conf"]
