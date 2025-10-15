@@ -4,13 +4,7 @@ services:
     env: docker
     plan: free
     region: frankfurt
-    healthCheckPath: /health
     envVars:
       - key: TURN_PASSWORD
         generateValue: true
-      - key: RENDER_EXTERNAL_IP
-        fromService:
-          type: web
-          name: clikho-turn
-          property: hostname
     numInstances: 1
