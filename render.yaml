@@ -7,4 +7,3 @@ services:
     envVars:
       - key: TURN_PASSWORD
         generateValue: true
-    numInstances: 1
